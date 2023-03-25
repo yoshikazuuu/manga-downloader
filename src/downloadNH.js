@@ -5,6 +5,29 @@ const downloadPages = require("./utils/downloader.js");
 
 const NHENTAI_CUSTOM_ENDPOINT = "https://janda.sinkaroid.org/nhentai/get?book=";
 
+// Helper function to delete the zip file and the associated folder
+function deleteZipAndFolder(galleryID) {
+  const zipFilePath = `nhen/${galleryID}.zip`;
+
+  // Delete the zip file
+  fs.unlink(zipFilePath, (err) => {
+    if (err) {
+      console.error("Error deleting zip file:", err);
+    } else {
+      console.log("Zip file deleted successfully.");
+    }
+  });
+
+  // Delete the folder
+  fs.rm(`nhen/${galleryID}`, { recursive: true, force: true }, (err) => {
+    if (err) {
+      console.error("Error deleting folder:", err);
+    } else {
+      console.log("Folder deleted successfully.");
+    }
+  });
+}
+
 // Zips the folder containing the downloaded pages
 async function zipFolder(ID) {
   return new Promise((resolve, reject) => {
