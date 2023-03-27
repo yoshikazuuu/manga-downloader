@@ -6,6 +6,13 @@ const downloadMD = require("./src/downloadMD");
 const downloadNH = require("./src/downloadNH");
 
 const PORT = process.env.PORT || 3069;
+const https = require('node:https');
+
+var privateKey = fs.readFileSync( 'path/to/your/private.pem' );
+var certificate = fs.readFileSync( 'path/to/your/cert.pem' );
+var ca = fs.readFileSync("path/to/your/ca.pem");
+
+const credentials = { key: privateKey, cert: certificate, ca: ca };
 
 // Middleware to log the requested URL
 app.use((req, res, next) => {
@@ -75,6 +82,6 @@ app.get("/download/nhen/:galleryID.zip", noCache, (req, res) => {
   });
 });
 
-app.listen(PORT, () => {
+https.createServer(credentials, app).listen(PORT, () => {
   console.log(`Server is running on port ${PORT}`);
 });
