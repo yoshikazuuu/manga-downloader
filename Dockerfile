@@ -7,8 +7,8 @@ WORKDIR /app
 # Copy package.json into the container at /app
 COPY package.json /app
 
-# Install any needed packages specified in package.json
-RUN npm install
+# Install pnpm and any needed packages specified in package.json
+RUN npm install -g pnpm && pnpm install
 
 # Copy the rest of the application into the container at /app
 COPY . /app
@@ -16,8 +16,5 @@ COPY . /app
 # Make port 3069 available to the world outside this container
 EXPOSE 3069
 
-# Define environment variable
-ENV NODE_ENV production
-
 # Run app.js using nodemon when the container launches
-CMD ["npm", "run", "deploy"]
+CMD ["pnpm", "run", "deploy"]

@@ -2,82 +2,77 @@
 
 Manga Downloader is a lightweight Express.js application that allows you to download manga chapters from Mangadex and nhentai galleries easily by providing the chapterID or galleryID. The app utilizes Docker for easy deployment and management.
 
+## About
+
+This project was created to support my Discord bot [Mizuki](https://github.com/yoshikazuuu/mizuki) and primarily serves as a self-learning exercise. If you find the code helpful and notice areas for improvement, please feel free to contribute.
+
 ## Features
 
 - Download manga chapters from Mangadex
 - Download nhentai galleries
+- Easily integrate with other applications
 
-## Getting Started
-
-Follow these simple steps to get Manga Downloader up and running.
+## Installation
 
 ### 1. Clone the repository
-
-Clone the GitHub repository to your local machine:
 
 ```bash
 git clone https://github.com/yoshikazuuu/manga-downloader.git
 cd manga-downloader
 ```
 
-### 2. Build the Docker image
+### 2. Set up the environment file.
 
-Build the Docker image with the following command:
+Enable HTTPS configuration in this step. Create a copy of the example environment file, and rename it to .env.
+
+```bash
+cp .env.example .env
+nano .env
+```
+
+Customize the environment variables to your needs.
+
+```env
+HTTPS=false
+PRIVATEKEY_PATH="path/to/your/private.pem"
+CERT_PATH="path/to/your/cert.pem"
+CA_PATH="path/to/your/ca.pem"
+```
+
+### 3. Build the Docker image.
+
+You can configure it to link with the docker hub or just leave it as it is.
 
 ```bash
 docker build -t manga-downloader .
 ```
 
-### 3. Run the Docker container
+### 4. Run the Docker container.
 
-Run the Docker container, mapping your desired port to the container's port 3069:
+Ensure you provide the path to your environment file.
 
 ```bash
-docker run -d -p 3069:3069 --name manga-downloader manga-downloader
-
+docker run -d -p 3069:3069 --env-file .env --name manga-downloader manga-downloader
 ```
 
 ## Usage
 
-### Downloading a chapter from Mangadex
+To download a chapter from mangadex or nhentai or integrate it to your app, follow these steps:
 
-Send a POST request to create a download job for a Mangadex chapter:
+1. Send a POST request to create a job. Replace {chapterID} or {galleryID} with the actual ID of the chapter or gallery you want to download.
 
 ```bash
-curl -X POST http://localhost:3069/download/mangadex/{chapterID}
-
+   curl -X POST http://localhost:3069/download/mangadex/{chapterID}
+   curl -X POST http://localhost:3069/download/nhentai/{galleryID}
 ```
 
-The server will return a JSON response indicating whether the task was successful or failed:
+2. If the job is successful, the app will return a JSON response with `{success: true}`.
 
-```json
-{
-  "success": true
-}
-```
-
-If the task is successful, you can download the chapter archive using the following command:
+3. To download the file, send a GET request to the same endpoint with .zip appended to the end of the URL.
 
 ```bash
 curl http://localhost:3069/download/mangadex/{chapterID}.zip
-```
-
-## Downloading a gallery from nhentai
-
-Replace {galleryID} with the desired nhentai gallery ID and follow the same steps as for Mangadex:
-
-```bash
-curl -X POST http://localhost:3069/download/nhen/{galleryID}
-```
-
-```json
-{
-  "success": true
-}
-```
-
-```bash
-curl http://localhost:3069/download/nhen/{galleryID}.zip
+curl http://localhost:3069/download/nhentai/{galleryID}.zip
 ```
 
 ## Contributing

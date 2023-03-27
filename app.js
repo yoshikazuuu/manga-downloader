@@ -1,18 +1,15 @@
 const express = require("express");
 const app = express();
 const path = require("path");
+const https = require("https");
 const fs = require("fs");
-const downloadMD = require("./src/downloadMD");
-const downloadNH = require("./src/downloadNH");
+const downloadMD = require("./src/mangadex");
+const downloadNH = require("./src/nhentai");
+const dotenv = require("dotenv");
 
 const PORT = process.env.PORT || 3069;
-const https = require('node:https');
 
-var privateKey = fs.readFileSync( 'path/to/your/private.pem' );
-var certificate = fs.readFileSync( 'path/to/your/cert.pem' );
-var ca = fs.readFileSync("path/to/your/ca.pem");
-
-const credentials = { key: privateKey, cert: certificate, ca: ca };
+dotenv.config();
 
 // Middleware to log the requested URL
 app.use((req, res, next) => {
@@ -82,6 +79,23 @@ app.get("/download/nhen/:galleryID.zip", noCache, (req, res) => {
   });
 });
 
-https.createServer(credentials, app).listen(PORT, () => {
-  console.log(`Server is running on port ${PORT}`);
-});
+// Create the server
+// Checking if the server does utilize https or not
+if (process.env.HTTPS && process.env.HTTPS.toLowerCase() === "true") {
+  var privateKey = fs.readFileSync(process.env.PRIVATEKEY_PATH);
+  var certificate = fs.readFileSync(process.env.CERT_PATH);
+  var ca = fs.readFileSync(process.env.CA_PATH);
+  const credentials = { key: privateKey, cert: certificate, ca: ca };
+
+  // Launch it
+  console.log("Running on HTTPS.");
+  https.createServer(credentials, app).listen(PORT, () => {
+    console.log(`Server is running on port ${PORT}`);
+  });
+} else {
+  // Normal http server
+  console.log("Running on HTTP.");
+  app.listen(PORT, () => {
+    console.log(`Server is running on port ${PORT}`);
+  });
+}
