@@ -4,3 +4,4 @@ nhen/
 md/
 nginx.conf
 .env
+.DS_Store

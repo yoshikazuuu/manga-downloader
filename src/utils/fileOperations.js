@@ -47,7 +47,7 @@ async function zipFolder(ID, basePath) {
     });
 
     archive.pipe(output);
-    archive.directory(`${basePath}/${ID}, false`);
+    archive.directory(`${basePath}/${ID}`, false);
     archive.finalize();
   });
 }
