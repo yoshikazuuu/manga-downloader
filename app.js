@@ -7,9 +7,9 @@ const downloadMD = require("./src/mangadex");
 const downloadNH = require("./src/nhentai");
 const dotenv = require("dotenv");
 
-const PORT = process.env.PORT || 3069;
-
+// Read the environment variable
 dotenv.config();
+const PORT = process.env.PORT || 3069;
 
 // Middleware to log the requested URL
 app.use((req, res, next) => {
@@ -82,10 +82,13 @@ app.get("/download/nhen/:galleryID.zip", noCache, (req, res) => {
 // Create the server
 // Checking if the server does utilize https or not
 if (process.env.HTTPS && process.env.HTTPS.toLowerCase() === "true") {
-  var privateKey = fs.readFileSync(process.env.PRIVATEKEY_PATH);
-  var certificate = fs.readFileSync(process.env.CERT_PATH);
-  var ca = fs.readFileSync(process.env.CA_PATH);
-  const credentials = { key: privateKey, cert: certificate, ca: ca };
+  // Bind the credentials
+  const certsDir = process.env.CERTS_DIR;
+  const pkey = fs.readFileSync(`${certsDir}/${process.env.PRIVATEKEY}`);
+  const certificate = fs.readFileSync(`${certsDir}/${process.env.CERT}`);
+  const ca = fs.readFileSync(`${certsDir}/${process.env.CA}`);
+
+  const credentials = { key: pkey, cert: certificate, ca: ca };
 
   // Launch it
   console.log("Running on HTTPS.");

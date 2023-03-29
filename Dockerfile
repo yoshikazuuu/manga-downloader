@@ -8,7 +8,7 @@ WORKDIR /app
 COPY package.json /app
 
 # Install pnpm and any needed packages specified in package.json
-RUN npm install -g pnpm && pnpm install
+RUN npm install -g pnpm && pnpm install --production
 
 # Copy the rest of the application into the container at /app
 COPY . /app
@@ -17,7 +17,7 @@ COPY . /app
 EXPOSE 3069
 
 # Define the location for the certificates within the container
-ENV CERTS_DIR /app
+ENV CERTS_DIR /certs
 
 # Run app.js using nodemon when the container launches
 CMD ["pnpm", "run", "deploy"]

@@ -33,10 +33,10 @@ nano .env
 Customize the environment variables to your needs.
 
 ```env
-HTTPS=false
-PRIVATEKEY_PATH="path/to/your/private.pem"
-CERT_PATH="path/to/your/cert.pem"
-CA_PATH="path/to/your/ca.pem"
+HTTPS=true
+PRIVATEKEY=private.pem
+CERT=cert.pem
+CA=ca.pem
 ```
 
 ### 3. Build the Docker image.
@@ -52,7 +52,7 @@ docker build -t manga-downloader .
 Ensure you provide the path to your environment file.
 
 ```bash
-docker run -d -p 3069:3069 --env-file .env --name manga-downloader manga-downloader
+docker run -d -p 3069:3069 -v /path/to/your/certs:/certs --name manga-downloader --env-file .env manga-downloader
 ```
 
 ## Usage
