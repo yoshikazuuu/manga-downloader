@@ -17,7 +17,7 @@ COPY . /app
 EXPOSE 3069
 
 # Define the location for the certificates within the container
-ENV CERTS_DIR /certs
+ENV CERTS_DIR /app
 
 # Run app.js using nodemon when the container launches
 CMD ["pnpm", "run", "deploy"]
