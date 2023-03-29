@@ -16,5 +16,8 @@ COPY . /app
 # Make port 3069 available to the world outside this container
 EXPOSE 3069
 
+# Define the location for the certificates within the container
+ENV CERTS_DIR /certs
+
 # Run app.js using nodemon when the container launches
 CMD ["pnpm", "run", "deploy"]
